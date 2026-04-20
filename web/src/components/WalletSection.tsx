@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { UserRejectedRequestError } from "viem";
 import { hardhat, sepolia } from "wagmi/chains";
 import {
@@ -52,10 +52,6 @@ export function WalletSection() {
   const connectErrorCopy = displayedConnectError
     ? describeConnectError(displayedConnectError)
     : null;
-
-  useEffect(() => {
-    if (connection.status === "connected") setConnectFallbackError(null);
-  }, [connection.status]);
 
   const onConnect = useCallback(async () => {
     setConnectFallbackError(null);

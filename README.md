@@ -1,3 +1,183 @@
+# Event Management dApp
+
+A blockchain-based community event platform built with Solidity, Hardhat, React, and Wagmi.
+
+Users can:
+- connect a wallet,
+- create events on-chain,
+- browse all events on the selected network,
+- RSVP to active events,
+- cancel events they organized.
+
+The app focuses on clear wallet safety messaging and simple, non-technical UX.
+
+## Features
+
+- On-chain event creation with validation
+- Event categories and participant limits
+- RSVP flow with full/cancelled/past safeguards
+- Organizer-only event cancellation
+- Live network status (latest block heartbeat)
+- Friendly transaction and wallet error messages
+- Local Hardhat + Sepolia support
+
+## Tech Stack
+
+- **Smart contracts:** Solidity `0.8.28`, Hardhat 3, Viem
+- **Frontend:** React 19, Vite, Wagmi, TanStack Query, TypeScript
+- **Testing:** Hardhat Solidity tests + Node.js integration tests
+
+## Project Structure
+
+```text
+event-dapp/
+|-- contracts/
+|   |-- EventManagement.sol
+|   `-- Counter.sol
+|-- scripts/
+|   |-- deploy-event-management.ts
+|   |-- create-event.ts
+|   |-- read-events.ts
+|   `-- constants.ts
+|-- test/
+|   |-- EventManagement.ts
+|   `-- Counter.ts
+|-- ignition/modules/
+|   `-- EventManagement.ts
+`-- web/
+    |-- src/components/
+    |-- src/lib/
+    `-- package.json
+```
+
+## Prerequisites
+
+- Node.js 18+
+- npm
+- MetaMask or another EVM wallet (for frontend usage)
+
+## Installation
+
+```bash
+npm install
+npm install --prefix web
+```
+
+## Environment Variables
+
+Create a `.env` in the project root for Hardhat network credentials:
+
+```env
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_KEY
+SEPOLIA_PRIVATE_KEY=0xYOUR_PRIVATE_KEY
+```
+
+Optional frontend variables (in `web/.env` or root env when using Vite):
+
+```env
+VITE_LOCAL_RPC_URL=http://127.0.0.1:8545
+VITE_SEPOLIA_RPC_URL=https://rpc.sepolia.org
+VITE_EVENT_MANAGEMENT_ADDRESS_LOCAL=0x...
+VITE_EVENT_MANAGEMENT_ADDRESS_SEPOLIA=0x...
+```
+
+## Run Locally
+
+1) Start a local chain:
+
+```bash
+npm run node
+```
+
+2) Deploy `EventManagement` to localhost:
+
+```bash
+npm run deploy:event:localhost
+```
+
+3) Start frontend:
+
+```bash
+npm run web:dev
+```
+
+4) Open:
+
+[`http://localhost:5173`](http://localhost:5173)
+
+## Deployment
+
+### Sepolia (manual script)
+
+```bash
+npm run deploy:event:sepolia
+```
+
+### Localhost (Ignition)
+
+```bash
+npm run ignition:event:localhost
+```
+
+## Scripts
+
+Root scripts:
+- `npm run build` - compile contracts
+- `npm run test` - run all contract tests
+- `npm run node` - run local Hardhat node
+- `npm run deploy:event:localhost` - deploy to localhost
+- `npm run deploy:event:sepolia` - deploy to Sepolia
+- `npm run web:dev` - run frontend dev server
+- `npm run web:build` - build frontend
+
+Interaction helpers:
+- `npx hardhat run scripts/create-event.ts --network localhost`
+- `npx hardhat run scripts/read-events.ts`
+
+## Contract Overview
+
+`EventManagement` stores events in a mapping by incremental `id`.
+
+Each event tracks:
+- title
+- description
+- date (unix timestamp)
+- organizer
+- active status
+- category
+- max participants
+- current participants
+
+Core functions:
+- `createEvent(...)`
+- `registerForEvent(eventId)`
+- `cancelEvent(eventId)`
+- `getEvent(eventId)`
+
+Emitted events:
+- `EventCreated`
+- `EventRegistered`
+- `EventCancelled`
+
+## Testing
+
+```bash
+npm test
+```
+
+This runs:
+- Solidity tests (Foundry-style in Hardhat)
+- Node.js integration tests for contract behavior
+
+## Notes
+
+- Local default contract address in scripts and frontend is aligned for first deploy on a fresh `hardhat node`.
+- If you deploy multiple times, set explicit addresses through env vars to avoid mismatches.
+- Never commit real private keys. Use test accounts only.
+
+## License
+
+ISC
 # event-management-dapp
 Blockchain-based decentralized event management system
 =======

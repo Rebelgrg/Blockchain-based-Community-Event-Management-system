@@ -220,6 +220,21 @@ export const eventManagementAbi = [
             "internalType": "bool",
             "name": "isActive",
             "type": "bool"
+          },
+          {
+            "internalType": "enum EventManagement.EventCategory",
+            "name": "category",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxParticipants",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "currentParticipants",
+            "type": "uint256"
           }
         ],
         "internalType": "struct EventManagement.EventDetails",

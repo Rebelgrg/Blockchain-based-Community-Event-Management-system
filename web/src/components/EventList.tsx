@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { hardhat, sepolia } from "wagmi/chains";
 import {
   useChainId,
@@ -31,6 +31,7 @@ export function EventList() {
   const connection = useConnection();
   const chainId = useChainId();
   const [search, setSearch] = useState("");
+  const [nowSec, setNowSec] = useState(0);
   const [filter, setFilter] = useState<"all" | "active" | "mine" | "registered">(
     "all",
   );
@@ -109,6 +110,13 @@ export function EventList() {
     hash: cancelHash,
   });
 
+  useEffect(() => {
+    const updateNow = () => setNowSec(Math.floor(Date.now() / 1000));
+    updateNow();
+    const timer = window.setInterval(updateNow, 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
   const events = useMemo(() => {
     if (!rows) return [];
 
@@ -162,7 +170,6 @@ export function EventList() {
   }, [rows, registrationData, connection.address]);
 
   const visibleEvents = useMemo(() => {
-    const now = Date.now() / 1000;
     const q = search.trim().toLowerCase();
 
     return events
@@ -179,12 +186,12 @@ export function EventList() {
       })
       .sort((a, b) => {
         // Keep active upcoming events first for easier browsing.
-        const aScore = (a.isActive ? 2 : 0) + (a.ts > now ? 1 : 0);
-        const bScore = (b.isActive ? 2 : 0) + (b.ts > now ? 1 : 0);
+        const aScore = (a.isActive ? 2 : 0) + (a.ts > nowSec ? 1 : 0);
+        const bScore = (b.isActive ? 2 : 0) + (b.ts > nowSec ? 1 : 0);
         if (aScore !== bScore) return bScore - aScore;
         return a.ts - b.ts;
       });
-  }, [events, filter, search]);
+  }, [events, filter, nowSec, search]);
 
   const handleRegister = (eventId: number) => {
     if (!contractAddress) return;
@@ -267,7 +274,7 @@ export function EventList() {
             const canRegister =
               event.isActive &&
               !event.isRegistered &&
-              event.ts > Date.now() / 1000 &&
+              event.ts > nowSec &&
               Number(event.currentParticipants) < Number(event.maxParticipants);
             const canCancel = event.isActive && event.isOrganizer;
             const isFull =
@@ -319,7 +326,7 @@ export function EventList() {
                         ? "Unavailable: cancelled"
                         : isFull
                           ? "Unavailable: full"
-                          : event.ts <= Date.now() / 1000
+                          : event.ts <= nowSec
                             ? "Unavailable: ended"
                             : "Unavailable"}
                     </span>

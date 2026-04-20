@@ -32,8 +32,11 @@ const txHash = await eventManagement.write.createEvent([
   EVENT_MAX_PARTICIPANTS,
 ]);
 const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
-const createdEvent = await eventManagement.read.events([0n]);
+const nextEventId = await eventManagement.read.nextEventId();
+const createdEventId = nextEventId - 1n;
+const createdEvent = await eventManagement.read.events([createdEventId]);
 
 console.log(`Transaction hash: ${txHash}`);
 console.log(`Block number: ${receipt.blockNumber}`);
+console.log(`Created event id: ${createdEventId}`);
 console.log("Stored event:", createdEvent);
