@@ -126,11 +126,14 @@ export function CreateEventForm() {
         <p>
           No contract address is configured for this network. Deploy the
           contract, then set{" "}
-          <code className="inline-code">VITE_EVENT_MANAGEMENT_ADDRESS</code> or{" "}
+          <code className="inline-code">
+            VITE_EVENT_MANAGEMENT_ADDRESS_LOCAL
+          </code>{" "}
+          or{" "}
           <code className="inline-code">
             VITE_EVENT_MANAGEMENT_ADDRESS_SEPOLIA
           </code>{" "}
-          in <code className="inline-code">web/.env</code> and restart the dev
+          in <code className="inline-code">.env</code> and restart the dev
           server.
         </p>
       </section>

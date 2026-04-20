@@ -6,20 +6,18 @@ const LOCAL_DEFAULT: Address =
 
 /**
  * Resolves the EventManagement contract for the active chain.
- * Set `VITE_EVENT_MANAGEMENT_ADDRESS` in `web/.env` to override all chains,
- * or `VITE_EVENT_MANAGEMENT_ADDRESS_SEPOLIA` for Sepolia only.
+ * Set `VITE_EVENT_MANAGEMENT_ADDRESS_LOCAL` in `.env` for localhost (31337),
+ * and `VITE_EVENT_MANAGEMENT_ADDRESS_SEPOLIA` for Sepolia (11155111).
  */
 export function getEventManagementAddress(chainId: number): Address | null {
-  const globalAddr = import.meta.env.VITE_EVENT_MANAGEMENT_ADDRESS as
+  const localAddr = import.meta.env.VITE_EVENT_MANAGEMENT_ADDRESS_LOCAL as
     | Address
     | undefined;
-  if (globalAddr) return globalAddr;
-
-  if (chainId === 31_337) return LOCAL_DEFAULT;
+  if (chainId === 31_337) return localAddr ?? LOCAL_DEFAULT;
 
   const sepoliaAddr = import.meta.env
     .VITE_EVENT_MANAGEMENT_ADDRESS_SEPOLIA as Address | undefined;
-  if (chainId === 11_155_111 && sepoliaAddr) return sepoliaAddr;
+  if (chainId === 11_155_111) return sepoliaAddr ?? null;
 
   return null;
 }
