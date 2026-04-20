@@ -54,7 +54,7 @@ The `EventManagement` contract provides:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/prakriti515/event-management-dapp.git
+git clone https://github.com/Rebelgrg/Blockchain-based-Community-Event-Management-system.git
 cd event-dapp
 ```
 
